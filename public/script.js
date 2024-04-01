@@ -4,7 +4,6 @@ const getFormData = () => {
         itemName: formData.get("itemName"),
         itemDescription: formData.get("itemDescription"),
         supply: formData.getAll("supply[]"),
-        // Add more properties if needed
     };
     return craftData;
 };
@@ -64,18 +63,15 @@ window.onclick = (event) => {
     }
 };
 
-// Function to open the dialog box
 const showAddItemModal = () => {
     document.getElementById("addItemModal").style.display = "block";
 };
 
 
-// Function to close the dialog box and reset form data and added elements
 const hideAddItemModal = () => {
     const addItemForm = document.getElementById("addItemForm");
-    addItemForm.reset(); // Reset the form data
+    addItemForm.reset(); 
 
-    // Remove any added supply input elements
     const suppliesContainer = document.getElementById("supplies");
     while (suppliesContainer.children.length > 1) {
         suppliesContainer.removeChild(suppliesContainer.lastChild);
@@ -84,12 +80,8 @@ const hideAddItemModal = () => {
     document.getElementById("addItemModal").style.display = "none"; // Close the modal dialog
 };
 
-// Event listener for closing the dialog box
 document.getElementById("cancelButton").onclick = hideAddItemModal;
 
-
-
-// Event listener for form submission
 document.getElementById("addItemForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(document.getElementById("addItemForm"));
@@ -100,7 +92,7 @@ document.getElementById("addItemForm").addEventListener("submit", async (e) => {
         });
         if (response.ok) {
             hideAddItemModal();
-            populateGallery(); // Refresh the data on the page
+            populateGallery(); 
         } else {
             console.error("Failed to add item:", response.statusText);
         }
@@ -109,14 +101,10 @@ document.getElementById("addItemForm").addEventListener("submit", async (e) => {
     }
 });
 
-// Event listener for opening the dialog box
 document.getElementById("addCraftButton").addEventListener("click", showAddItemModal);
 
 document.getElementById("cancelButton").onclick = hideAddItemModal;
 
-
-
-// Function to handle file selection for image preview
 const showSelectedImage = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -128,27 +116,20 @@ const showSelectedImage = (event) => {
     reader.readAsDataURL(file);
 };
 
-
-// Event listener for file input change
 document.getElementById("itemImage").addEventListener("change", showSelectedImage);
 
-// Function to add an additional supply input
-// Function to add an additional supply input
 const addSupply = () => {
     const suppliesContainer = document.getElementById("supplies");
     const lastSupplyInput = suppliesContainer.querySelector("input[type='text']:last-of-type");
 
-    // Create a new text input element
     const newInput = document.createElement("input");
     newInput.type = "text";
     newInput.name = "supply[]";
     newInput.required = true;
 
-    // Append the new input after the last input, if exists
     if (lastSupplyInput) {
         lastSupplyInput.insertAdjacentElement("afterend", newInput);
     } else {
-        // If no existing inputs, simply append the new input to the container
         suppliesContainer.appendChild(newInput);
     }
 };
