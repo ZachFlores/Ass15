@@ -63,3 +63,25 @@
     width: 100%;
     height: auto;
 }
+
+#addItemForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#supplies {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#supplies label {
+    margin-right: 10px;
+}
+
+#addSupplyButton {
+    margin-left: 10px;
+}
+
+
+

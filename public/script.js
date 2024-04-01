@@ -1,3 +1,14 @@
+const getFormData = () => {
+    const formData = new FormData(document.getElementById("addItemForm"));
+    const craftData = {
+        itemName: formData.get("itemName"),
+        itemDescription: formData.get("itemDescription"),
+        supply: formData.getAll("supply[]"),
+        // Add more properties if needed
+    };
+    return craftData;
+};
+
 const getCrafts = async () => {
     try {
         const response = await fetch("/api/crafts");
@@ -53,62 +64,93 @@ window.onclick = (event) => {
     }
 };
 
+// Function to open the dialog box
 const showAddItemModal = () => {
     document.getElementById("addItemModal").style.display = "block";
 };
 
+
+// Function to close the dialog box and reset form data and added elements
 const hideAddItemModal = () => {
-    document.getElementById("addItemModal").style.display = "none";
-    document.getElementById("addItemForm").reset();
+    const addItemForm = document.getElementById("addItemForm");
+    addItemForm.reset(); // Reset the form data
+
+    // Remove any added supply input elements
+    const suppliesContainer = document.getElementById("supplies");
+    while (suppliesContainer.children.length > 1) {
+        suppliesContainer.removeChild(suppliesContainer.lastChild);
+    }
+
+    document.getElementById("addItemModal").style.display = "none"; // Close the modal dialog
 };
 
+// Event listener for closing the dialog box
+document.getElementById("cancelButton").onclick = hideAddItemModal;
+
+
+
+// Event listener for form submission
 document.getElementById("addItemForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(document.getElementById("addItemForm"));
-    let response;
     try {
-            response = await fetch("/api/crafts", {
+        const response = await fetch("/api/addItem", {
             method: "POST",
             body: formData,
         });
         if (response.ok) {
             hideAddItemModal();
-            populateGallery();
+            populateGallery(); // Refresh the data on the page
         } else {
             console.error("Failed to add item:", response.statusText);
-            response.json().then(data => {
-                console.log("Response body:", data);
-            });
         }
     } catch (error) {
         console.error("Error adding item:", error);
     }
 });
 
-const addSupply = () => {
-    const suppliesContainer = document.getElementById("supplies");
-    const input = document.createElement("input");
-    input.type = "text";
-    input.name = "supply[]";
-    input.required = true;
-    suppliesContainer.appendChild(input);
-    suppliesContainer.appendChild(document.createElement("br"));
-};
+// Event listener for opening the dialog box
+document.getElementById("addCraftButton").addEventListener("click", showAddItemModal);
 
+document.getElementById("cancelButton").onclick = hideAddItemModal;
+
+
+
+// Function to handle file selection for image preview
 const showSelectedImage = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
         const imageSrc = e.target.result;
-        document.getElementById("previewImage").src = imageSrc;
+        document.getElementById("previewImage").src = imageSrc; // Update the placeholder image source
+        document.getElementById("modalImage").src = imageSrc; // Set the source of the image in the modal dialog
     };
     reader.readAsDataURL(file);
 };
 
+
+// Event listener for file input change
 document.getElementById("itemImage").addEventListener("change", showSelectedImage);
 
-document.getElementById("addCraftButton").addEventListener("click", showAddItemModal);
+// Function to add an additional supply input
+// Function to add an additional supply input
+const addSupply = () => {
+    const suppliesContainer = document.getElementById("supplies");
+    const lastSupplyInput = suppliesContainer.querySelector("input[type='text']:last-of-type");
 
-document.getElementById("addSupplyButton").addEventListener("click", addSupply);
+    // Create a new text input element
+    const newInput = document.createElement("input");
+    newInput.type = "text";
+    newInput.name = "supply[]";
+    newInput.required = true;
 
-document.getElementById("cancelButton").addEventListener("click", hideAddItemModal);
+    // Append the new input after the last input, if exists
+    if (lastSupplyInput) {
+        lastSupplyInput.insertAdjacentElement("afterend", newInput);
+    } else {
+        // If no existing inputs, simply append the new input to the container
+        suppliesContainer.appendChild(newInput);
+    }
+};
+
+document.getElementById("addSupplyButton").onclick = addSupply;

@@ -18,17 +18,15 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({  }).single('itemImage');
+const upload = multer({ storage: storage }).single('itemImage');
 
 const craftsSchema = Joi.object({
-    name: Joi.string().required(),
-    description: Joi.string().required(),
-    supplies: Joi.array().items(Joi.string()).required()
+    itemName: Joi.string().required(),
+    itemDescription: Joi.string().required(),
+    supply: Joi.array().items(Joi.string()).required()
 });
 
-// GET endpoint for /api/crafts
 app.get("/api/crafts", async (req, res) => {
-    console.log("Someone is using our API");
     try {
         const data = await fs.promises.readFile('crafts.json', 'utf8');
         const crafts = JSON.parse(data);
@@ -39,8 +37,7 @@ app.get("/api/crafts", async (req, res) => {
     }
 });
 
-// POST endpoint for /api/crafts (to add a new craft item)
-app.post("/api/crafts", (req, res) => {
+app.post("/api/addItem", (req, res) => {
     upload(req, res, async function (err) {
         if (err instanceof multer.MulterError) {
             return res.status(500).json({ error: "File upload error" });
