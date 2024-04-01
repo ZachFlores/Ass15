@@ -67,7 +67,7 @@ const showAddItemModal = () => {
     document.getElementById("addItemModal").style.display = "block";
 };
 
-
+//debug
 const hideAddItemModal = () => {
     const addItemForm = document.getElementById("addItemForm");
     addItemForm.reset(); 
