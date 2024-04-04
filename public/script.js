@@ -45,7 +45,7 @@ const populateGallery = async () => {
     gallery.innerHTML = "";
     crafts.forEach(craft => {
         const img = document.createElement("img");
-        img.src = `images/${craft.image}`;
+        img.src = `public/images/${craft.image}`;
         img.alt = craft.name;
         img.onclick = () => showModal(craft);
         gallery.appendChild(img);
@@ -110,8 +110,8 @@ const showSelectedImage = (event) => {
     const reader = new FileReader();
     reader.onload = (e) => {
         const imageSrc = e.target.result;
-        document.getElementById("previewImage").src = imageSrc; // Update the placeholder image source
-        document.getElementById("modalImage").src = imageSrc; // Set the source of the image in the modal dialog
+        document.getElementById("previewImage").src = imageSrc;
+        document.getElementById("modalImage").src = imageSrc; 
     };
     reader.readAsDataURL(file);
 };
